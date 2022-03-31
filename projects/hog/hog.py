@@ -26,7 +26,6 @@ def roll_dice(num_rolls, dice=six_sided):
     hasone = False
     while num_rolls > 0:
         num = dice()
-        print("DEBUG:", num)
         if num == 1:
             hasone = True
         sum += num
@@ -175,10 +174,20 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     leader = None  # To be used in problem 7
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    while score0 < goal and score1 < goal:
+        if who == 0:
+            score0 += take_turn(strategy0(score0, score1), score0, score1, dice, goal)
+            score0 += hog_pile(score0, score1)
+        else:
+            score1 += take_turn(strategy1(score1, score0), score1, score0, dice, goal)
+            score1 += hog_pile(score1, score0)
+        who = next_player(who)
     # END PROBLEM 5
     # (note that the indentation for the problem 7 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+        leader, message = say(score0, score1, leader)
+        if message != None and message != " ":
+            print(message)
     # END PROBLEM 7
     return score0, score1
 
@@ -213,6 +222,17 @@ def announce_lead_changes(score0, score1, last_leader=None):
     """
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+    leader = None
+    message = None
+    if score0 < score1:
+        leader = 1
+        if last_leader != 1:
+            message = str("Player 1 takes the lead by %d" % (score1 - score0))
+    elif score0 > score1:
+        leader = 0
+        if last_leader != 0:
+            message = str("Player 0 takes the lead by %d" % (score0 - score1))
+    return leader, message
     # END PROBLEM 6
 
 
