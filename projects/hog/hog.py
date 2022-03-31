@@ -299,6 +299,14 @@ def make_averaged(original_function, total_samples=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def func(*args):
+        average = 0
+        i = 0
+        while i < total_samples:
+            average += original_function(*args)
+            i += 1
+        return average / total_samples
+    return func
     # END PROBLEM 8
 
 
@@ -313,6 +321,18 @@ def max_scoring_num_rolls(dice=six_sided, total_samples=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    average = make_averaged(roll_dice, total_samples)
+    i = 1
+    global max_val
+    max_val = 0
+    ret_roll_numbers = 0
+    while i <= 10:
+        average_val = average(i, dice)
+        if average_val > max_val:
+           ret_roll_numbers = i 
+           max_val = average_val
+        i += 1
+    return ret_roll_numbers
     # END PROBLEM 9
 
 
@@ -353,7 +373,9 @@ def hefty_hogs_strategy(score, opponent_score, threshold=8, num_rolls=6):
     returns NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Remove this line once implemented.
+    if hefty_hogs(score, opponent_score) >= threshold:
+        return 0
+    return num_rolls
     # END PROBLEM 10
 
 
@@ -363,7 +385,12 @@ def hog_pile_strategy(score, opponent_score, threshold=8, num_rolls=6):
     Otherwise, it returns NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Remove this line once implemented.
+    if hefty_hogs_strategy(score, opponent_score, threshold, num_rolls) == 0:
+        return 0
+    score += hefty_hogs(score, opponent_score)
+    if hog_pile(score, opponent_score) != 0:
+        return 0
+    return num_rolls
     # END PROBLEM 11
 
 
